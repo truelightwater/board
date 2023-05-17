@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class BoardService {
     private final BoardMapper boardMapper;
 
-
     public void save(BoardRequest boardRequest) {
         boardMapper.save(boardRequest);
     }

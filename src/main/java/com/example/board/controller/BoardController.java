@@ -17,12 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
-
     private final Logger log = LoggerFactory.getLogger("BoardController");
-
     private final BoardService boardService;        // 생성자 주입
 
     @GetMapping("/save")
+
     public String saveForm() {
         return "save";
     }
@@ -31,11 +30,12 @@ public class BoardController {
     // @ModelAttribute : boardDTO 클래스를 찾아서 필드값(html)이 동일하다면
     // 해당하는 필드의 Setter 를 호출해서 Setter 메소드에 담아준다.
     public String save(@ModelAttribute BoardRequest boardRequest) {
-        System.out.println("boardDTO = " + boardRequest);
+        log.info("boardRequest = " + boardRequest);
         boardService.save(boardRequest);
 
         return "index";
     }
+
 
     @GetMapping("/")
     public String findAll(Model model) {
@@ -71,6 +71,7 @@ public class BoardController {
         model.addAttribute("board", update);
         return "detail";
     }
+
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
