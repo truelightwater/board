@@ -6,76 +6,73 @@ import com.example.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/board")
+@RequestMapping("/api2")
 public class BoardController {
     private final Logger log = LoggerFactory.getLogger("BoardController");
     private final BoardService boardService;        // 생성자 주입
 
-    @GetMapping("/save")
-
+/*    @GetMapping("/save")
     public String saveForm() {
         return "save";
-    }
+    }*/
 
-    @PostMapping("/save")
-    // @ModelAttribute : boardDTO 클래스를 찾아서 필드값(html)이 동일하다면
-    // 해당하는 필드의 Setter 를 호출해서 Setter 메소드에 담아준다.
-    public String save(@ModelAttribute BoardRequest boardRequest) {
+    @PostMapping("/board")
+    public BoardRequest save(@ModelAttribute BoardRequest boardRequest) {
         log.info("boardRequest = " + boardRequest);
-        boardService.save(boardRequest);
 
-        return "index";
+        BoardRequest boardModel = BoardRequest.builder()
+                .boardTitle(boardRequest.getBoardTitle())
+                .boardContents(boardRequest.getBoardContents())
+                .boardHits(boardRequest.getBoardHits())
+                .boardWriter(boardRequest.getBoardWriter())
+                .boardPass(boardRequest.getBoardPass())
+                .build();
+
+        boardService.save(boardModel);
+        return boardModel;
     }
 
 
-    @GetMapping("/")
-    public String findAll(Model model) {
-        // DB 에서 전체 게시글 데이터를 가져와서 list.html 에 보여준다.
+    @GetMapping("/board")
+    public List<BoardResponse> findAll() {
         List<BoardResponse> boardDTOList = boardService.findAll();
-        model.addAttribute("boardList", boardDTOList);
-
-        return "list";
+        return boardDTOList;
     }
 
-    @GetMapping("/{id}")
-    public String findById(@PathVariable Long id, Model model) {
+    @GetMapping("/board/{id}")
+    public BoardResponse findById(@PathVariable Long id) {
         /*  해당 게시글의 조회수를 하나 올리고
             게시글 데이터를 가져와서 detail.html 에 출력
          */
         boardService.updateHits(id);
         BoardResponse boardResponse = boardService.findById(id);
-        model.addAttribute("board", boardResponse);
 
-        return "detail";
+        return boardResponse;
     }
 
-    @GetMapping("/update/{id}")
+/*    @PutMapping("/board/{id}")
     public String updateForm(@PathVariable Long id, Model model) {
         BoardResponse boardResponse = boardService.findById(id);
         model.addAttribute("boardUpdate", boardResponse);
         return "update";
-    }
+    }*/
 
-    @PostMapping("/update")
-    public String update(@ModelAttribute BoardRequest boardRequest, Model model) {
+    @PutMapping("/board/{id}")
+    public BoardResponse update(@ModelAttribute BoardRequest boardRequest) {
         BoardResponse update = boardService.update(boardRequest);
-        model.addAttribute("board", update);
-        return "detail";
+        return update;
     }
 
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    @DeleteMapping ("/board/{id}")
+    public void delete(@PathVariable Long id) {
         boardService.delete(id);
-        return "redirect:/board/";
     }
 }

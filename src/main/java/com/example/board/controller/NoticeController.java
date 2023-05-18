@@ -1,10 +1,7 @@
 package com.example.board.controller;
 
 import com.example.board.model.NoticeModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ public class NoticeController {
         return 2;
     }
 
-    @PostMapping("/api/notice")
+/*    @PostMapping("/api/notice")
     public NoticeModel addNotice(@RequestParam String title, @RequestParam String content) {
         return NoticeModel.builder()
                 .id(1L)
@@ -45,5 +42,12 @@ public class NoticeController {
                 .content(content)
                 .regDate(LocalDateTime.now())
                 .build();
+    }*/
+
+    @PostMapping("/api/notice")
+    public NoticeModel addNotice(@RequestBody NoticeModel noticeModel) {
+        noticeModel.setId(3L);
+        noticeModel.setRegDate(LocalDateTime.now());
+        return noticeModel;
     }
 }

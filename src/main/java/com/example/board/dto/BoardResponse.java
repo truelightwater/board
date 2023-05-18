@@ -1,5 +1,6 @@
 package com.example.board.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@Builder
 public class BoardResponse {
     private Long id;                            // PK
     private String boardTitle;                  // 제목
