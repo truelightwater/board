@@ -23,7 +23,7 @@ public class BoardController {
         return "save";
     }*/
 
-    @PostMapping("/board")
+    @PostMapping("/v1/board")
     public BoardRequest save(@ModelAttribute BoardRequest boardRequest) {
         log.info("boardRequest = " + boardRequest);
 
@@ -40,13 +40,13 @@ public class BoardController {
     }
 
 
-    @GetMapping("/board")
+    @GetMapping("/v1/board")
     public List<BoardResponse> findAll() {
         List<BoardResponse> boardDTOList = boardService.findAll();
         return boardDTOList;
     }
 
-    @GetMapping("/board/{id}")
+    @GetMapping("/v1/board/{id}")
     public BoardResponse findById(@PathVariable Long id) {
         /*  해당 게시글의 조회수를 하나 올리고
             게시글 데이터를 가져와서 detail.html 에 출력
@@ -64,14 +64,14 @@ public class BoardController {
         return "update";
     }*/
 
-    @PutMapping("/board/{id}")
+    @PutMapping("/v1/board/{id}")
     public BoardResponse update(@ModelAttribute BoardRequest boardRequest) {
         BoardResponse update = boardService.update(boardRequest);
         return update;
     }
 
 
-    @DeleteMapping ("/board/{id}")
+    @DeleteMapping ("/v1/board/{id}")
     public void delete(@PathVariable Long id) {
         boardService.delete(id);
     }

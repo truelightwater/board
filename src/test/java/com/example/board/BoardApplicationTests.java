@@ -27,5 +27,4 @@ public class BoardApplicationTests {
             e.printStackTrace();
         }
     }
-
 }
