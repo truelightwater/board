@@ -9,6 +9,7 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
 
+
 /**
 * 게시글 저장
 *  @param param - 게시글 정보

@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
+// @MybatisTest 단위테스트 코드
+// layer 에 맞는 단위테스트가 필요하다.
+//
 @SpringBootTest
 public class MapperTest {
 

@@ -27,6 +27,10 @@ public class BoardService {
 
     @Transactional
     public void updateHits(Long id) {
+        // 클라이언트 유저의 IP로 한번만 될 수 있도록 하기
+        // HashMap 에 IP 체크 (class or Object)
+        //
+        //
         boardMapper.updateHits(id);
     }
 

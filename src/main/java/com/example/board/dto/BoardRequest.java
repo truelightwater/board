@@ -20,4 +20,5 @@ public class BoardRequest {
     private Integer boardHits;
     private LocalDateTime boardCreatedTime;
     private LocalDateTime boardUpdatedTime;
+
 }
