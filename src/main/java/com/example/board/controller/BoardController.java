@@ -13,12 +13,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.RequestContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.mvc.condition.RequestConditionHolder;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Api(description = "게시판 REST API")
@@ -47,8 +52,17 @@ public class BoardController {
     @ApiOperation(value = "게시글 작성")
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("/v1/boards")
-    public ResponseEntity<BoardRequest> save(@ModelAttribute BoardRequest boardRequest) {
+    public ResponseEntity<BoardRequest> save(@Valid @ModelAttribute BoardRequest boardRequest, BindingResult result) {
         log.info("boardRequest = " + boardRequest);
+
+//        if (result.hasErrors()) {
+//            Map<String, String> errors = new HashMap<>();
+//            for (FieldError error : result.getFieldError()) {
+//                errors.put(error.getField(), error.getDefaultMessage());
+//            }
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((BoardRequest) errors);
+//        }
+
 
         BoardRequest boardModel = BoardRequest.builder()
                 .boardTitle(boardRequest.getBoardTitle())
