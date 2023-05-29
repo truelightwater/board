@@ -23,11 +23,13 @@ public class MapperTest {
 
     @Test
     void save() {
-        BoardRequest params = new BoardRequest();
-        params.setBoardTitle("테스트 제목 4");
-        params.setBoardContents("테스트 내용 4");
-        params.setBoardWriter("테스트 글쓴이 4");
-        params.setBoardPass("1234");
+        BoardRequest params = BoardRequest.builder()
+                        .boardTitle("테스트 제목 4")
+                        .boardContents("테스트 내용")
+                        .boardWriter("글쓴이 4")
+                        .boardPass("1234")
+                        .build();
+
         boardMapper.save(params);
     }
 
@@ -54,11 +56,13 @@ public class MapperTest {
     @Test
     void update() {
         // 1. 게시글 수정
-        BoardRequest params = new BoardRequest();
-        params.setId(2L);
-        params.setBoardTitle("수정 제목 2");
-        params.setBoardContents("수정 내용 2");
-        params.setBoardWriter("수정자 변경 2");
+
+        BoardRequest params = BoardRequest.builder()
+                .id(2L)
+                .boardTitle("수정 제목 2")
+                .boardContents("수정 내용 2")
+                .boardWriter("수정자 2")
+                .build();
 
         boardMapper.update(params);
 

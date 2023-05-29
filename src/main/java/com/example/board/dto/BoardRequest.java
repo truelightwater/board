@@ -21,4 +21,7 @@ public class BoardRequest {
     private LocalDateTime boardCreatedTime;
     private LocalDateTime boardUpdatedTime;
 
+
+
+
 }

@@ -32,7 +32,7 @@ public class BoardController {
     public String test() {
         throw new CustomException(ExceptionCode.NOT_FOUND);
 
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        // RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         // ApplicationContext..!
         // Spring 에서 내부 구현방식
         //
@@ -53,7 +53,6 @@ public class BoardController {
         BoardRequest boardModel = BoardRequest.builder()
                 .boardTitle(boardRequest.getBoardTitle())
                 .boardContents(boardRequest.getBoardContents())
-                .boardHits(boardRequest.getBoardHits())
                 .boardWriter(boardRequest.getBoardWriter())
                 .boardPass(boardRequest.getBoardPass())
                 .build();
@@ -75,18 +74,19 @@ public class BoardController {
     @GetMapping("/v1/boards/{id}")
     public ResponseEntity<BoardResponse> findById(@PathVariable("id") @ApiParam(value = "게시글 번호") Long id) {
 
-        //찾는 아이디가 없다면, NOT_FOUND 를 발생시킨다.
-        BoardResponse byId = boardService.findById(id);
+        // 찾는 아이디가 없다면, NOT_FOUND 를 발생시킨다.
+        // BoardResponse byId = boardService.findById(id);
 
-        if (byId == null) {
+/*        if (byId == null) {
             throw new CustomException(ExceptionCode.NOT_FOUND);
-        }
+        }*/
+
+        BoardResponse response = boardService.findById(id);
 
         //  해당 게시글의 조회수를 하나 올리고 반환한다.
         boardService.updateHits(id);
-        BoardResponse boardResponse = boardService.findById(id);
 
-        return ResponseEntity.ok(boardResponse);
+        return ResponseEntity.ok(response);
 /*        try {
             boardService.updateHits(id);
             BoardResponse boardResponse = boardService.findById(id);
@@ -114,8 +114,7 @@ public class BoardController {
 
     @ApiOperation(value = "게시글 삭제")
     @DeleteMapping ("/v1/boards/{id}")
-    public ResponseEntity delete(@PathVariable("id") @ApiParam(value = "게시글 번호")Long id) {
+    public void delete(@PathVariable("id") @ApiParam(value = "게시글 번호")Long id) {
         boardService.delete(id);
-        return (ResponseEntity) ResponseEntity.ok();
     }
 }
