@@ -6,6 +6,7 @@ import com.example.board.service.BoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,23 +18,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BindingResult;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
-@WebMvcTest
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = BoardController.class)
 public class BoardControllerTest {
     @MockBean
     BoardController boardController;
     @MockBean
     BoardService boardService;
+    @Autowired
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -48,6 +58,7 @@ public class BoardControllerTest {
     public void saveBoardTest() throws Exception {
         // given
         BoardRequest requestTest = BoardRequest.builder()
+                .id(1L)
                 .boardContents("테스트")
                 .boardWriter("테스트")
                 .boardTitle("테스트")
@@ -55,13 +66,16 @@ public class BoardControllerTest {
                 .build();
 
         // when
-        mockMvc.perform(post("/api/v1/boards")
+        ResultActions resultActions = mockMvc.perform(post("/api/v1/boards")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestTest)))
+                .andDo(print());
+
+
+        // then
+        resultActions
                 .andExpect(status().isCreated());
-
-
-//                .andExpect(jsonPath("boardContents").value("테스트"))
+//                .andExpect(jsonPath("id").value(1L));
 //                .andExpect(jsonPath("boardWriter").value("테스트"))
 //                .andExpect(jsonPath("boardTitle").value("테스트"))
 //                .andExpect(jsonPath("boardPass").value("1234"));
