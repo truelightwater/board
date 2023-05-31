@@ -1,7 +1,7 @@
 package com.example.board.mapper;
 
-import com.example.board.dto.BoardRequest;
-import com.example.board.dto.BoardResponse;
+import com.example.board.model.BoardRequest;
+import com.example.board.model.BoardResponse;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

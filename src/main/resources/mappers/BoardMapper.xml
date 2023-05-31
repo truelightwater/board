@@ -17,7 +17,7 @@
 
 
     <!-- 게시글 저장 -->
-    <insert id="save" parameterType="com.example.board.dto.BoardRequest" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="com.example.board.model.BoardRequest" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO boardTable (
         <include refid="postColumns" />
         ) VALUES (
@@ -34,7 +34,7 @@
 
 
     <!-- 게시글 상세정보 조회 -->
-    <select id="findById" parameterType="long" resultType="com.example.board.dto.BoardResponse">
+    <select id="findById" parameterType="long" resultType="com.example.board.model.BoardResponse">
         SELECT
         <include refid="postColumns" />
         FROM
@@ -45,7 +45,7 @@
 
 
     <!-- 게시글 수정 -->
-    <update id="update" parameterType="com.example.board.dto.BoardRequest">
+    <update id="update" parameterType="com.example.board.model.BoardRequest">
         UPDATE boardTable
         SET
             boardUpdatedTime = NOW()
@@ -57,7 +57,7 @@
     </update>
 
     <!-- 글 조회  -->
-    <update id="updateHits" parameterType="com.example.board.dto.BoardRequest">
+    <update id="updateHits" parameterType="com.example.board.model.BoardRequest">
         UPDATE boardTable
         SET
             boardHits = boardHits+1
@@ -75,7 +75,7 @@
 
 
     <!-- 게시글 리스트 조회 -->
-    <select id="findAll" resultType="com.example.board.dto.BoardResponse">
+    <select id="findAll" resultType="com.example.board.model.BoardResponse">
         SELECT
         <include refid="postColumns" />
         FROM

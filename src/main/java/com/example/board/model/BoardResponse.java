@@ -1,7 +1,9 @@
-package com.example.board.dto;
+package com.example.board.model;
 
 import lombok.*;
 
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -20,5 +22,9 @@ public class BoardResponse {
     private int boardHits;                      // 조회 수
     private LocalDateTime boardCreatedTime;     // 생성일시
     private LocalDateTime boardUpdatedTime;     // 최종 수정일시
+    private LocalDate dueDate;                  // 마감일
+    @Size(min=1, max = 10,
+            message = "About Me must be between 10 and 100 characters")
+    private String boardType;                   // 타입
 
 }

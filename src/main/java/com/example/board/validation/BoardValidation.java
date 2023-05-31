@@ -1,6 +1,6 @@
 package com.example.board.validation;
 
-import com.example.board.dto.BoardRequest;
+import com.example.board.model.BoardRequest;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 public class BoardValidation implements Validator {

@@ -1,7 +1,7 @@
 package com.example.board.servlet;
 
-import com.example.board.dto.BoardRequest;
-import com.example.board.dto.BoardResponse;
+import com.example.board.model.BoardRequest;
+import com.example.board.model.BoardResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StreamUtils;
 
