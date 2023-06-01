@@ -1,7 +1,12 @@
 package com.example.board.model;
 
+import com.example.board.validation.BoardTypeAnnotation;
 import lombok.*;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +19,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardResponse {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;                            // PK
     private String boardTitle;                  // 제목
     private String boardContents;               // 내용
@@ -23,8 +31,11 @@ public class BoardResponse {
     private LocalDateTime boardCreatedTime;     // 생성일시
     private LocalDateTime boardUpdatedTime;     // 최종 수정일시
     private LocalDate dueDate;                  // 마감일
-    @Size(min=1, max = 10,
-            message = "About Me must be between 10 and 100 characters")
-    private String boardType;                   // 타입
+    @BoardTypeAnnotation(boardTypeCheck = BoardTypes.NOTYPE)
+    private BoardTypes boardType;               // 게시글 타입
+
+    public void setDueDate(LocalDate localDate) {
+        this.dueDate = localDate;
+    }
 
 }

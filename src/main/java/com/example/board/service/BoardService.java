@@ -1,5 +1,7 @@
 package com.example.board.service;
 
+import com.example.board.exception.CustomException;
+import com.example.board.exception.ExceptionCode;
 import com.example.board.model.BoardRequest;
 import com.example.board.model.BoardResponse;
 import com.example.board.mapper.BoardMapper;
@@ -37,9 +39,8 @@ public class BoardService {
 
         if (!uniqueIPs.contains(clientIP)) {
             uniqueIPs.add(clientIP);
+            boardMapper.updateHits(id);
         }
-
-        boardMapper.updateHits(id);
     }
 
     public BoardResponse findById(Long id) {

@@ -27,7 +27,7 @@ import java.util.*;
 @RequestMapping("/api")
 public class BoardController {
     private final BoardService boardService;      // 생성자 주입
-    private static HttpHeaders headers = new HttpHeaders();
+    private static HttpHeaders headers = new HttpHeaders();   // Http Headers
 
     @GetMapping("/test")
     public String test() {
@@ -40,7 +40,7 @@ public class BoardController {
 
     @ApiOperation(value = "게시글 작성")
     @PostMapping("/v1/boards")
-    public ResponseEntity<BoardRequest> save(@Valid @ModelAttribute BoardRequest boardRequest) {
+    public ResponseEntity<BoardRequest> save(@ModelAttribute BoardRequest boardRequest) {
         log.info("boardRequest = " + boardRequest);
 
         // Header 에 필드 추가해보기
@@ -51,6 +51,7 @@ public class BoardController {
                 .boardContents(boardRequest.getBoardContents())
                 .boardWriter(boardRequest.getBoardWriter())
                 .boardPass(boardRequest.getBoardPass())
+                .boardType(boardRequest.getBoardType())
                 .build();
 
         boardService.save(boardModel);
@@ -86,14 +87,6 @@ public class BoardController {
         BoardResponse response = boardService.findById(id);
         return ResponseEntity.ok(response);
 
-/*        try {
-            boardService.updateHits(id);
-            BoardResponse boardResponse = boardService.findById(id);
-
-            return ResponseEntity.ok(boardResponse);
-        } catch (NoSuchElementException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "조회할 게시글이 없습니다.");
-        }*/
     }
 
     @ApiOperation(value = "게시글 상세 내용 수정")
@@ -110,6 +103,7 @@ public class BoardController {
     public void delete(@PathVariable("id") @ApiParam(value = "게시글 번호")Long id) {
         boardService.delete(id);
     }
+
 
     private static HttpHeaders getResponseHttpHeaders() {
         // 새로운 Response 헤더 필드 추가

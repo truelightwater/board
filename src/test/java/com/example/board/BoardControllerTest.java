@@ -42,7 +42,13 @@ import static org.springframework.web.servlet.function.RequestPredicates.content
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BoardController.class)
 public class BoardControllerTest {
+
+    // "Spring Bean" Jackson, 직렬, 역직렬 유사한 빈 있는지 확인하기
+    // https://www.baeldung.com/spring-boot-customize-jackson-objectmapper
     ObjectMapper objectMapper = new ObjectMapper();
+
+
+    // Mock vs MockBean
     @MockBean
     BoardService boardService;
     @Autowired
@@ -51,14 +57,23 @@ public class BoardControllerTest {
 
     @BeforeEach
     public void setUp() {
+        // Joda ? LocalDate ? Year ?
+        // JavaTimeModule()을 왜 불편함이 생겼을까 ?
+        // LocalDate... ! Java 8
+        // Jackson 은 왜 지원하지 않을까 ?
+        // Opensource 확인해보기
+        // Spring 에서는 어떻게 사용하는지, 어떻게 돌아가는것인지
         objectMapper.registerModule(new JavaTimeModule());
     }
 
 
     @Test
     @DisplayName("[POST]게시글 작성")
-    public void saveBoardTest() throws Exception {
+    public void saveBoardTest() {
         // given
+        // json 파일로 만들어서 String 으로 변수담아서 진행
+        // 메소드 추출처럼 Fixed, 해도 괜찮다.
+        // 재사용
         BoardRequest boardRequest = BoardRequest.builder()
                         .id(1L)
                         .boardTitle("글쓰기 테스트")
@@ -92,6 +107,10 @@ public class BoardControllerTest {
         // given
         List<BoardResponse> responseList = new ArrayList<>();
 
+        // final 키워드 : 변경되지 않은 것은 final,
+        // 불변에 대한 생각
+        // ImmutableList -> Read-Only 명시적으로 가독성면에서 좋다.
+        // https://www.techiedelight.com/mutable-unmodifiable-immutable-empty-list-java/
         responseList.add(BoardResponse.builder()
                 .id(1L)
                 .boardTitle("제목1")
@@ -163,6 +182,9 @@ public class BoardControllerTest {
                 .boardWriter("수정후 글쓴이")
                 .build();
 
+        // boardRequest 객체 생성해서 진행 -> any()
+        // equals, hashcode 어떻게 동작하는지
+        // 특정타입을 넣어서 같은지
         given(boardService.update(any())).willReturn(boardResponse);
 
         // when
