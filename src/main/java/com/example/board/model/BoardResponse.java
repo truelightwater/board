@@ -31,11 +31,6 @@ public class BoardResponse {
     private LocalDateTime boardCreatedTime;     // 생성일시
     private LocalDateTime boardUpdatedTime;     // 최종 수정일시
     private LocalDate dueDate;                  // 마감일
-    @BoardTypeAnnotation(boardTypeCheck = BoardTypes.NOTYPE)
     private BoardTypes boardType;               // 게시글 타입
-
-    public void setDueDate(LocalDate localDate) {
-        this.dueDate = localDate;
-    }
 
 }

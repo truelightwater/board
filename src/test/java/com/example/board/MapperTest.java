@@ -31,6 +31,8 @@ public class MapperTest {
                         .build();
 
         boardMapper.save(params);
+
+
     }
 
     @Test
@@ -43,7 +45,7 @@ public class MapperTest {
 
     @Test
     void findById() {
-        BoardResponse byId = boardMapper.findById(1L);
+        BoardResponse byId = boardMapper.findById(39L);
 
         try {
             String value = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(byId);

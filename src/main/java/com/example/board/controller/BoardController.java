@@ -47,11 +47,16 @@ public class BoardController {
         HttpHeaders headers = getResponseHttpHeaders();
 
         BoardRequest boardModel = BoardRequest.builder()
+                .id(boardRequest.getId())
                 .boardTitle(boardRequest.getBoardTitle())
                 .boardContents(boardRequest.getBoardContents())
                 .boardWriter(boardRequest.getBoardWriter())
                 .boardPass(boardRequest.getBoardPass())
+                .boardHits(boardRequest.getBoardHits())
                 .boardType(boardRequest.getBoardType())
+                .boardCreatedTime(boardRequest.getBoardCreatedTime())
+                .boardUpdatedTime(boardRequest.getBoardUpdatedTime())
+                .dueDate(boardRequest.getDueDate())
                 .build();
 
         boardService.save(boardModel);

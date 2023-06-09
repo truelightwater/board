@@ -4,6 +4,7 @@ import com.example.board.controller.BoardController;
 import com.example.board.model.BoardRequest;
 import com.example.board.model.BoardResponse;
 import com.example.board.service.BoardService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -15,29 +16,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.web.servlet.function.RequestPredicates.contentType;
+
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BoardController.class)
@@ -47,13 +39,11 @@ public class BoardControllerTest {
     // https://www.baeldung.com/spring-boot-customize-jackson-objectmapper
     ObjectMapper objectMapper = new ObjectMapper();
 
-
     // Mock vs MockBean
     @MockBean
     BoardService boardService;
     @Autowired
     MockMvc mockMvc;
-
 
     @BeforeEach
     public void setUp() {
@@ -69,28 +59,31 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("[POST]게시글 작성")
-    public void saveBoardTest() {
+    public void saveBoardTest()  {
         // given
-        // json 파일로 만들어서 String 으로 변수담아서 진행
-        // 메소드 추출처럼 Fixed, 해도 괜찮다.
-        // 재사용
-        BoardRequest boardRequest = BoardRequest.builder()
-                        .id(1L)
-                        .boardTitle("글쓰기 테스트")
-                        .boardContents("테스트입니다.")
-                        .boardWriter("김경수")
-                        .boardPass("1234")
-                        .build();
+            // json 파일로 만들어서 String 으로 변수담아서 진행
+            // 메소드 추출처럼 Fixed, 해도 괜찮다.
+            // 재사용
+        BoardRequest boardRequest = getBoardRequest();
 
-        // when
-        ResultActions resultActions = mockMvc.perform(post("/api/v1/boards")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(boardRequest)));
+        try {
+            String boardToString = objectMapper.writeValueAsString(boardRequest);
 
-        // then
-        resultActions
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            // when
+            ResultActions resultActions = mockMvc.perform(post("/api/v1/boards")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(boardToString));
+
+            // then
+            resultActions
+                    .andExpect(status().isCreated())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
 
         /**
@@ -99,6 +92,17 @@ public class BoardControllerTest {
          */
         verify(boardService, times(1)).save(any(BoardRequest.class));
 
+    }
+
+    private static BoardRequest getBoardRequest() {
+        BoardRequest boardRequest = BoardRequest.builder()
+                        .id(1L)
+                        .boardTitle("글쓰기 테스트")
+                        .boardContents("테스트입니다.")
+                        .boardWriter("김경수")
+                        .boardPass("1234")
+                        .build();
+        return boardRequest;
     }
 
     @Test
@@ -146,13 +150,7 @@ public class BoardControllerTest {
     @DisplayName("[GET]게시글 일부 조회")
     public void findOneBoardTest() throws Exception {
         // given
-        BoardResponse boardResponse = BoardResponse.builder()
-                .id(1L)
-                .boardTitle("제목1")
-                .boardContents("내용1")
-                .boardWriter("글쓴이1")
-                .boardPass("12341")
-                .build();
+        BoardResponse boardResponse = getBoardResponse();
 
         given(boardService.findById(1L)).willReturn(boardResponse);
 
@@ -171,16 +169,22 @@ public class BoardControllerTest {
 
     }
 
+    private static BoardResponse getBoardResponse() {
+        BoardResponse boardResponse = BoardResponse.builder()
+                .id(1L)
+                .boardTitle("제목1")
+                .boardContents("내용1")
+                .boardWriter("글쓴이1")
+                .boardPass("12341")
+                .build();
+        return boardResponse;
+    }
+
     @Test
     @DisplayName("[PUT]게시글 수정")
     public void updateBoardTest() throws Exception {
         // given
-        BoardResponse boardResponse = BoardResponse.builder()
-                .id(1L)
-                .boardTitle("수정후 제목")
-                .boardContents("수정후 내용")
-                .boardWriter("수정후 글쓴이")
-                .build();
+        BoardResponse boardResponse = getBoardResponse();
 
         // boardRequest 객체 생성해서 진행 -> any()
         // equals, hashcode 어떻게 동작하는지
