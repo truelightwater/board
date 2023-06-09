@@ -16,12 +16,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.annotation.Immutable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.thymeleaf.util.ListUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -109,12 +112,14 @@ public class BoardControllerTest {
     @DisplayName("[GET]게시글 전체 조회")
     public void findAllBoardTest() throws Exception {
         // given
-        List<BoardResponse> responseList = new ArrayList<>();
+
 
         // final 키워드 : 변경되지 않은 것은 final,
         // 불변에 대한 생각
         // ImmutableList -> Read-Only 명시적으로 가독성면에서 좋다.
         // https://www.techiedelight.com/mutable-unmodifiable-immutable-empty-list-java/
+        final List<BoardResponse> responseList = new ArrayList<>();
+
         responseList.add(BoardResponse.builder()
                 .id(1L)
                 .boardTitle("제목1")
@@ -184,7 +189,11 @@ public class BoardControllerTest {
     @DisplayName("[PUT]게시글 수정")
     public void updateBoardTest() throws Exception {
         // given
-        BoardResponse boardResponse = getBoardResponse();
+        BoardResponse boardResponse = BoardResponse.builder()
+                .boardTitle("수정후 제목")
+                .boardContents("수정후 내용")
+                .boardWriter("수정후 글쓴이")
+                .build();
 
         // boardRequest 객체 생성해서 진행 -> any()
         // equals, hashcode 어떻게 동작하는지
@@ -195,7 +204,6 @@ public class BoardControllerTest {
         ResultActions resultActions = mockMvc.perform(put("/api/v1/boards/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(boardResponse)));
-
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("boardTitle").value("수정후 제목"))
