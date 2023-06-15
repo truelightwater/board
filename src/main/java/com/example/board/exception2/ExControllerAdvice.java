@@ -3,12 +3,15 @@ package com.example.board.exception2;
 import com.example.board.exception2.resposestatus.ForbiddenException;
 import com.example.board.exception2.resposestatus.NotFoundException;
 import com.example.board.exception2.resposestatus.UnauthorizedException;
+import com.example.board.model.BoardResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.validation.ConstraintViolationException;
 
 import static org.springframework.web.servlet.function.ServerResponse.status;
 
@@ -52,11 +55,6 @@ public class ExControllerAdvice {
     }
 
 
-
-
-
-
-
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public ErrorResponse exHandler(Exception ex) {
@@ -64,4 +62,10 @@ public class ExControllerAdvice {
         return new ErrorResponse("Exception!", 500, "예외가 발생했습니다.");
     }
 
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    protected ErrorResponse handleException(ConstraintViolationException ex) {
+        log.info("validation error", ex);
+        return new ErrorResponse("validation error", 400, "유효성 검사에 실패했습니다.");
+    }
 }

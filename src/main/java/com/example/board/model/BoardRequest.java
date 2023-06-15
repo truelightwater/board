@@ -68,7 +68,7 @@ public class BoardRequest {
     private Integer boardHits = 0;
     private LocalDateTime boardCreatedTime = LocalDateTime.now();
     private LocalDateTime boardUpdatedTime;
-    private LocalDate dueDate = null;
+    private LocalDate dueDate;
     private BoardTypes boardType;
 
 }

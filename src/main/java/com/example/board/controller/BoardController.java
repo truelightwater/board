@@ -42,6 +42,7 @@ public class BoardController {
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 201, message = "게시글 생성"),
             @ApiResponse(code = 401, message = "인증실패"),
             @ApiResponse(code = 403, message = "권한실패"),
             @ApiResponse(code = 404, message = "잘못된 요청"),
@@ -61,11 +62,12 @@ public class BoardController {
                 .boardContents(boardRequest.getBoardContents())
                 .boardWriter(boardRequest.getBoardWriter())
                 .boardPass(boardRequest.getBoardPass())
+                .boardPassConfirm(boardRequest.getBoardPassConfirm())
                 .boardHits(boardRequest.getBoardHits())
-                .boardType(boardRequest.getBoardType())
                 .boardCreatedTime(boardRequest.getBoardCreatedTime())
                 .boardUpdatedTime(boardRequest.getBoardUpdatedTime())
                 .dueDate(boardRequest.getDueDate())
+                .boardType(boardRequest.getBoardType())
                 .build();
 
         boardService.save(boardModel);

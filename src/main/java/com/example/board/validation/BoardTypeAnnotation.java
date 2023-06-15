@@ -1,11 +1,14 @@
 package com.example.board.validation;
 
+import com.example.board.model.BoardTypes;
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.time.LocalDate;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -14,7 +17,6 @@ public @interface BoardTypeAnnotation {
 
     // invalid 할 때 표시할 기본 에러 메세지
     String message() default "게시판 타입이 질문이면 마감일이 설정됩니다.";
-
     String dueDate();
     String boardType();
 

@@ -10,6 +10,7 @@
         , boardContents
         , boardWriter
         , boardPass
+        , boardPassConfirm
         , boardHits
         , boardCreatedTime
         , boardUpdatedTime
@@ -28,6 +29,7 @@
         , #{boardContents}
         , #{boardWriter}
         , #{boardPass}
+        , #{boardPassConfirm}
         , 0
         , NOW()
         , NULL
@@ -57,6 +59,7 @@
           , boardContents = #{boardContents}
           , boardWriter = #{boardWriter}
           , boardType = #{boardType}
+          , dueDate = #{dueDate}
         WHERE
             id = #{id}
     </update>
