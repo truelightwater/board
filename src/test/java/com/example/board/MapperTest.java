@@ -32,7 +32,6 @@ public class MapperTest {
 
         boardMapper.save(params);
 
-
     }
 
     @Test

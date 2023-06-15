@@ -1,65 +1,34 @@
 package com.example.board.validation;
 
-import com.example.board.model.BoardRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.server.ServerErrorException;
+import org.springframework.beans.BeanWrapperImpl;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Field;
 
 @Slf4j
-public class PassWordConfirmCheckValidator implements ConstraintValidator<PassWordConfirmCheck, BoardRequest> {
-
-    private String message;
+public class PassWordConfirmCheckValidator implements ConstraintValidator<PassWordConfirmCheck, Object> {
     private String boardPass;
     private String boardPassConfirm;
 
     @Override
     public void initialize(PassWordConfirmCheck constraintAnnotation) {
-        message = constraintAnnotation.message();
         boardPass = constraintAnnotation.boardPass();
         boardPassConfirm = constraintAnnotation.boardPassConfirm();
     }
 
     @Override
-    public boolean isValid(BoardRequest boardRequest, ConstraintValidatorContext context) {
+    public boolean isValid(Object object, ConstraintValidatorContext context) {
 
-        boolean flag = true;
+        Object fieldValue = new BeanWrapperImpl(object).getPropertyValue(boardPass);
+        Object fieldMatchValue = new BeanWrapperImpl(object).getPropertyValue(boardPassConfirm);
 
-        String password = getFieldValue(boardRequest, boardPass);
-        String confirm = getFieldValue(boardRequest, boardPassConfirm);
-
-        if (!password.equals(confirm)) {
-            context.disableDefaultConstraintViolation();;
-            context.buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(password)
-                    .addConstraintViolation();
-            flag = false;
+        if (fieldValue != null) {
+            return fieldValue.equals(fieldMatchValue);
+        } else {
+            return fieldValue == null;
         }
 
-        return flag;
     }
 
-    private String getFieldValue(Object o, String fieldName) {
-        Class<?> clazz = o.getClass();
-        Field dataField;
-
-        try {
-            dataField = clazz.getDeclaredField(fieldName);
-            dataField.setAccessible(true);
-            Object target = dataField.get(o);
-
-            if (!(target instanceof String)) {
-                throw new ClassCastException("casting exception");
-            }
-            return (String) target;
-
-        } catch (IllegalAccessException e) {
-            log.error("IllegalAccessException", e);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        throw new ServerErrorException("Not Found Field");
-    }
 }

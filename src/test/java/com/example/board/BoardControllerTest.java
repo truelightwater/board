@@ -62,12 +62,16 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("[POST]게시글 작성")
-    public void saveBoardTest()  {
+    public void saveBoardTest() {
         // given
             // json 파일로 만들어서 String 으로 변수담아서 진행
             // 메소드 추출처럼 Fixed, 해도 괜찮다.
             // 재사용
         BoardRequest boardRequest = getBoardRequest();
+        // json 처리를 다해서 진행
+        // json 파일을 바로 읽어서 진행
+        // 문자열 그대로 가져오는게 좋다.
+        // 어떻게 json 파일을 가져오는지
 
         try {
             String boardToString = objectMapper.writeValueAsString(boardRequest);
@@ -118,7 +122,8 @@ public class BoardControllerTest {
         // 불변에 대한 생각
         // ImmutableList -> Read-Only 명시적으로 가독성면에서 좋다.
         // https://www.techiedelight.com/mutable-unmodifiable-immutable-empty-list-java/
-        final List<BoardResponse> responseList = new ArrayList<>();
+        final List<BoardResponse> responseList = List.of();
+
 
         responseList.add(BoardResponse.builder()
                 .id(1L)

@@ -2,11 +2,13 @@ package com.example.board.controller;
 
 import com.example.board.model.NoticeModel;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiIgnore
 @RestController
 public class NoticeController {
 

@@ -1,5 +1,6 @@
 package com.example.board.exception;
 
+import com.example.board.exception2.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+/*
     @ExceptionHandler(RuntimeException.class)
     protected ResponseEntity<ErrorResponse> handlerCustomException(final CustomException e) {
         log.error("handlerBusinessLogicException : {}", e.getMessage());
@@ -34,5 +35,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(ExceptionCode.INTERNAL_SERVER_ERROR.getStatus().value())
                 .body(new ErrorResponse(ExceptionCode.INTERNAL_SERVER_ERROR));
-    }
+    }*/
 }
