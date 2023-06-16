@@ -1,6 +1,6 @@
-package com.example.board.exception2;
+package com.example.board.exception;
 
-import com.example.board.exception2.errorstatus.*;
+import com.example.board.exception.errorstatus.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

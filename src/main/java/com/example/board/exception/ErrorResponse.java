@@ -1,4 +1,4 @@
-package com.example.board.exception2;
+package com.example.board.exception;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

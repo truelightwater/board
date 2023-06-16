@@ -1,15 +1,14 @@
-package com.example.board.exception2.errorstatus;
+package com.example.board.exception.errorstatus;
 
 import org.springframework.validation.BindingResult;
 
-public class PasswordSizeInvalidException extends RuntimeException {
+public class PasswordConfirmInvalidException extends RuntimeException {
 
     BindingResult bindingResult;
 
-    public PasswordSizeInvalidException(BindingResult bindingResult) {
+    public PasswordConfirmInvalidException(BindingResult bindingResult) {
         this.bindingResult = bindingResult;
     }
-
 
     public BindingResult getBindingResult() {
         return bindingResult;

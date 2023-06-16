@@ -1,13 +1,11 @@
 package com.example.board.controller;
 
-import com.example.board.exception2.errorstatus.PasswordConfirmInvalidException;
-import com.example.board.exception2.errorstatus.PasswordSizeInvalidException;
-import com.example.board.exception2.errorstatus.*;
+import com.example.board.exception.errorstatus.PasswordConfirmInvalidException;
+import com.example.board.exception.errorstatus.PasswordSizeInvalidException;
+import com.example.board.exception.errorstatus.*;
 import com.example.board.model.BoardDTO;
 import com.example.board.model.BoardRequest;
 import com.example.board.model.BoardResponse;
-import com.example.board.exception.CustomException;
-import com.example.board.exception.ExceptionCode;
 import com.example.board.service.BoardService;
 import io.swagger.annotations.*;
 import lombok.Builder;
@@ -23,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
 
 @Slf4j
@@ -36,14 +33,6 @@ public class BoardController {
     private final BoardService boardService;      // 생성자 주입
     private static HttpHeaders headers = new HttpHeaders();   // Http Headers
 
-    @GetMapping("/test")
-    public String test() {
-        throw new CustomException(ExceptionCode.NOT_FOUND);
-
-        // RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        // ApplicationContext..!
-        // Spring 에서 내부 구현방식
-    }
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
