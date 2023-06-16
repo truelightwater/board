@@ -1,8 +1,9 @@
 package com.example.board.controller;
 
-import com.example.board.exception2.resposestatus.ForbiddenException;
-import com.example.board.exception2.resposestatus.NotFoundException;
-import com.example.board.exception2.resposestatus.UnauthorizedException;
+import com.example.board.exception2.errorstatus.PasswordConfirmInvalidException;
+import com.example.board.exception2.errorstatus.PasswordSizeInvalidException;
+import com.example.board.exception2.errorstatus.*;
+import com.example.board.model.BoardDTO;
 import com.example.board.model.BoardRequest;
 import com.example.board.model.BoardResponse;
 import com.example.board.exception.CustomException;
@@ -15,6 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,24 +55,54 @@ public class BoardController {
     })
     @ApiOperation(value = "게시글 작성", notes = "게시판 글을 작성합니다.")
     @PostMapping("/v1/boards")
-    public ResponseEntity<BoardRequest> save(@ModelAttribute @Valid BoardRequest boardRequest) {
-        log.info("boardRequest = " + boardRequest);
+    public ResponseEntity<BoardRequest> save(@Validated @ModelAttribute BoardDTO boardDTO, BindingResult bindingResult) {
+        log.info("boardDTO = " + boardDTO);
 
         // Header 에 필드 추가해보기
         HttpHeaders headers = getResponseHttpHeaders();
 
+
+        // 비밀번호 Validations
+        if (bindingResult.hasErrors()) {
+            log.error("검증 오류 발생 errors = {}", bindingResult);
+
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                if (error instanceof FieldError) {
+                    throw new PasswordSizeInvalidException(bindingResult);
+                } else if (error instanceof ObjectError) {
+                    throw new PasswordConfirmInvalidException(bindingResult);
+                }
+            }
+        }
+
+
+        // 성공 로직
+        BoardDTO board = BoardDTO.builder()
+                .id(boardDTO.getId())
+                .boardTitle(boardDTO.getBoardTitle())
+                .boardContents(boardDTO.getBoardContents())
+                .boardWriter(boardDTO.getBoardWriter())
+                .boardPass(boardDTO.getBoardPass())
+                .boardPassConfirm(boardDTO.getBoardPassConfirm())
+                .boardHits(boardDTO.getBoardHits())
+                .boardCreatedTime(boardDTO.getBoardCreatedTime())
+                .boardUpdatedTime(boardDTO.getBoardUpdatedTime())
+                .dueDate(boardDTO.getDueDate())
+                .boardType(boardDTO.getBoardType())
+                .build();
+
         BoardRequest boardModel = BoardRequest.builder()
-                .id(boardRequest.getId())
-                .boardTitle(boardRequest.getBoardTitle())
-                .boardContents(boardRequest.getBoardContents())
-                .boardWriter(boardRequest.getBoardWriter())
-                .boardPass(boardRequest.getBoardPass())
-                .boardPassConfirm(boardRequest.getBoardPassConfirm())
-                .boardHits(boardRequest.getBoardHits())
-                .boardCreatedTime(boardRequest.getBoardCreatedTime())
-                .boardUpdatedTime(boardRequest.getBoardUpdatedTime())
-                .dueDate(boardRequest.getDueDate())
-                .boardType(boardRequest.getBoardType())
+                .id(board.getId())
+                .boardTitle(board.getBoardTitle())
+                .boardContents(board.getBoardContents())
+                .boardWriter(board.getBoardWriter())
+                .boardPass(board.getBoardPass())
+                .boardPassConfirm(board.getBoardPassConfirm())
+                .boardHits(board.getBoardHits())
+                .boardCreatedTime(board.getBoardCreatedTime())
+                .boardUpdatedTime(board.getBoardUpdatedTime())
+                .dueDate(board.getDueDate())
+                .boardType(board.getBoardType())
                 .build();
 
         boardService.save(boardModel);

@@ -1,13 +1,10 @@
 package com.example.board.model;
 
-import com.example.board.validation.BoardTypeAnnotation;
-import com.example.board.validation.PassWordConfirmCheck;
 import lombok.*;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -18,17 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@PassWordConfirmCheck.List({
-        @PassWordConfirmCheck(
-                boardPass = "boardPass",
-                boardPassConfirm= "boardPassConfirm")
-})
-@BoardTypeAnnotation.List({
-        @BoardTypeAnnotation(
-                boardType = "boardType",
-                dueDate = "dueDate")
-})
-
 // 401, 404 에러에 대한 정의
 // Swagger 문서에 정의를 하기 ( 에러 정의 )
 // Exception 에 대한 설계
@@ -59,7 +45,6 @@ public class BoardRequest {
     // Spring 의 활용도가 높아야 한다.
     // API 스펙, Query Param, Bean Validation
     // HTTP Message Converter
-    @NotNull(message = "작성자는 필수값입니다.")
     private String boardWriter;
     private String boardPass;
     private String boardPassConfirm;

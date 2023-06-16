@@ -1,5 +1,6 @@
 package com.example.board.validation;
 
+import com.example.board.model.BoardDTO;
 import com.example.board.model.BoardRequest;
 import com.example.board.model.BoardResponse;
 import com.example.board.model.BoardTypes;
@@ -23,7 +24,7 @@ import static org.apache.tomcat.jni.Time.now;
 
 
 @Slf4j
-public class BoardValidation implements ConstraintValidator<BoardTypeAnnotation, BoardRequest> {
+public class BoardValidation implements ConstraintValidator<BoardTypeAnnotation, BoardDTO> {
     private String message;
     private String boardType;
     private String dueDate;
@@ -43,7 +44,7 @@ public class BoardValidation implements ConstraintValidator<BoardTypeAnnotation,
     // 필드에 대한 명세가 있어야 한다.
     // 복합필드에 대한 처리
     @Override
-    public boolean isValid(BoardRequest boardRequest, ConstraintValidatorContext context) {
+    public boolean isValid(BoardDTO boardRequest, ConstraintValidatorContext context) {
 
         boolean flag = true;
         if (boardRequest.getBoardType() == BoardTypes.QUESTION) {

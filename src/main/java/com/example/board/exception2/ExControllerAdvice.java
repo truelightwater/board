@@ -1,9 +1,6 @@
 package com.example.board.exception2;
 
-import com.example.board.exception2.resposestatus.ForbiddenException;
-import com.example.board.exception2.resposestatus.NotFoundException;
-import com.example.board.exception2.resposestatus.UnauthorizedException;
-import com.example.board.model.BoardResponse;
+import com.example.board.exception2.errorstatus.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +9,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
-
-import static org.springframework.web.servlet.function.ServerResponse.status;
 
 @Slf4j
 @RestControllerAdvice
@@ -54,18 +49,36 @@ public class ExControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler
+    protected ErrorResponse handleException(ConstraintViolationException ex) {
+        log.info("validation error", ex);
+        return new ErrorResponse("validation error", 400, "유효성 검사에 실패했습니다.");
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> passwordConfirm(PasswordConfirmInvalidException ex) {
+        log.error("password error", ex);
+
+        ErrorResponse errorResponse = new ErrorResponse("PassWord Validation Exception!", 400, "비밀번호와 비밀번호 확인이 맞지 않습니다.");
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> passwordSize(PasswordSizeInvalidException ex) {
+        log.error("password error", ex);
+
+        ErrorResponse errorResponse = new ErrorResponse("PassWord Size too long!", 400, "비밀번호의 길이는 4에서 12사이어야 합니다.");
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public ErrorResponse exHandler(Exception ex) {
         log.error("500 error", ex);
         return new ErrorResponse("Exception!", 500, "예외가 발생했습니다.");
-    }
-
-
-    @ExceptionHandler(value = ConstraintViolationException.class)
-    protected ErrorResponse handleException(ConstraintViolationException ex) {
-        log.info("validation error", ex);
-        return new ErrorResponse("validation error", 400, "유효성 검사에 실패했습니다.");
     }
 }
