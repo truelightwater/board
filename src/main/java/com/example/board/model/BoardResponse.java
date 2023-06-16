@@ -20,8 +20,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BoardResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;                            // PK
     private String boardTitle;                  // 제목
     private String boardContents;               // 내용

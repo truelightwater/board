@@ -2,19 +2,11 @@ package com.example.board.model;
 
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-@Getter
-@Setter
-@ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 // 401, 404 에러에 대한 정의
 // Swagger 문서에 정의를 하기 ( 에러 정의 )
 // Exception 에 대한 설계
@@ -24,7 +16,12 @@ import java.time.LocalDateTime;
 // 인증, 인가에 대한 구분
 // Spring Security = 어떤 패턴이면 어떤 룰셋이 일치하라
 // 메뉴얼로 만든다. => 응답정의
-
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardRequest {
 
     // Pojo 기반
@@ -33,8 +30,7 @@ public class BoardRequest {
     // boardDTO 클래스
     // 책임이 너무 많아지게 된다. ( = 책임의 분리 )
     // 유틸성 Mapper Class
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
 
     // 언제 & 어떻게 동작하는지에 대한 이해

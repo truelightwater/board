@@ -44,18 +44,12 @@ public class BoardValidation implements ConstraintValidator<BoardTypeAnnotation,
     // 필드에 대한 명세가 있어야 한다.
     // 복합필드에 대한 처리
     @Override
-    public boolean isValid(BoardDTO boardRequest, ConstraintValidatorContext context) {
+    public boolean isValid(BoardDTO boardDTO, ConstraintValidatorContext context) {
 
         boolean flag = true;
-        if (boardRequest.getBoardType() == BoardTypes.QUESTION) {
-            boardRequest.setDueDate(LocalDateTime.now().plusDays(7).toLocalDate());
+        if (boardDTO.getBoardType() == BoardTypes.QUESTION) {
+            boardDTO.setDueDate(LocalDateTime.now().plusDays(7).toLocalDate());
             return flag;
-        } else {
-/*            context.disableDefaultConstraintViolation();;
-            context.buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(boardType)
-                    .addConstraintViolation();
-            flag = false;*/
         }
         return flag;
     }

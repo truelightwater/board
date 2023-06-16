@@ -75,9 +75,8 @@ public class BoardController {
             }
         }
 
-
         // 성공 로직
-        BoardDTO board = BoardDTO.builder()
+        BoardRequest boardModel = BoardRequest.builder()
                 .id(boardDTO.getId())
                 .boardTitle(boardDTO.getBoardTitle())
                 .boardContents(boardDTO.getBoardContents())
@@ -89,20 +88,6 @@ public class BoardController {
                 .boardUpdatedTime(boardDTO.getBoardUpdatedTime())
                 .dueDate(boardDTO.getDueDate())
                 .boardType(boardDTO.getBoardType())
-                .build();
-
-        BoardRequest boardModel = BoardRequest.builder()
-                .id(board.getId())
-                .boardTitle(board.getBoardTitle())
-                .boardContents(board.getBoardContents())
-                .boardWriter(board.getBoardWriter())
-                .boardPass(board.getBoardPass())
-                .boardPassConfirm(board.getBoardPassConfirm())
-                .boardHits(board.getBoardHits())
-                .boardCreatedTime(board.getBoardCreatedTime())
-                .boardUpdatedTime(board.getBoardUpdatedTime())
-                .dueDate(board.getDueDate())
-                .boardType(board.getBoardType())
                 .build();
 
         boardService.save(boardModel);
@@ -162,12 +147,19 @@ public class BoardController {
     })
     @ApiOperation(value = "게시글 상세 내용 수정", notes = "게시글을 수정할 수 있습니다.")
     @PutMapping("/v1/boards/{id}")
-    public ResponseEntity<BoardResponse> update(@ModelAttribute @Valid BoardRequest boardRequest) {
+    public ResponseEntity<BoardResponse> update(@Validated @ModelAttribute BoardDTO boardDTO) {
 
         // 인증 체크
         boolean isAuthorized = checkUserAuthorization();
         boolean hasPermission = checkUserPermission();
 
+        BoardRequest boardRequest = BoardRequest.builder()
+                .boardTitle(boardDTO.getBoardTitle())
+                .boardContents(boardDTO.getBoardContents())
+                .boardWriter(boardDTO.getBoardWriter())
+                .dueDate(boardDTO.getDueDate())
+                .boardType(boardDTO.getBoardType())
+                .build();
 
         if (isAuthorized) {
             if (hasPermission) {
