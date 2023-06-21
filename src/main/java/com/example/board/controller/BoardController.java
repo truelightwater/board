@@ -31,8 +31,6 @@ import java.util.*;
 @RequestMapping("/api")
 public class BoardController {
     private final BoardService boardService;      // 생성자 주입
-    private static HttpHeaders headers = new HttpHeaders();   // Http Headers
-
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -43,18 +41,17 @@ public class BoardController {
             @ApiResponse(code = 500, message = "서버에러")
     })
     @ApiOperation(value = "게시글 작성", notes = "게시판 글을 작성합니다.")
-    @PostMapping("/v1/boards")
-    public ResponseEntity<BoardRequest> save(@Validated @ModelAttribute BoardDTO boardDTO, BindingResult bindingResult) {
+    @PostMapping("/v1/board")
+    public ResponseEntity<BoardRequest> save(@Validated @ModelAttribute BoardDTO boardDTO,
+                                             BindingResult bindingResult) {
         log.info("boardDTO = " + boardDTO);
-
-        // Header 에 필드 추가해보기
-        HttpHeaders headers = getResponseHttpHeaders();
 
 
         // 비밀번호 Validations
         if (bindingResult.hasErrors()) {
             log.error("검증 오류 발생 errors = {}", bindingResult);
 
+            // notification 패턴
             for (ObjectError error : bindingResult.getAllErrors()) {
                 if (error instanceof FieldError) {
                     throw new PasswordSizeInvalidException(bindingResult);
@@ -63,6 +60,14 @@ public class BoardController {
                 }
             }
         }
+
+        // boardDTO => board
+        // Boarder border = Bodrder.builder().id(borderDto.getID())
+
+        // Controller
+        // borderRequest -> borderDto
+        // Service
+        // borderDto -> border
 
         // 성공 로직
         BoardRequest boardModel = BoardRequest.builder()
@@ -78,9 +83,10 @@ public class BoardController {
                 .dueDate(boardDTO.getDueDate())
                 .boardType(boardDTO.getBoardType())
                 .build();
+        // Mapstruct 찾아보기
 
         boardService.save(boardModel);
-        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(boardModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardModel);
     }
 
     @ApiResponses({
@@ -93,11 +99,13 @@ public class BoardController {
     @ApiOperation(value = "게시글 전체목록 조회", notes = "게시글 전체를 조회하여 보여줍니다.")
     @GetMapping("/v1/boards")
     public ResponseEntity<List<BoardResponse>> findAll() {
-        HttpHeaders headers = getResponseHttpHeaders();
 
         List<BoardResponse> boardDTOList = boardService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(boardDTOList);
+        return ResponseEntity.status(HttpStatus.OK).body(boardDTOList);
     }
+
+
+
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -127,6 +135,9 @@ public class BoardController {
 
     }
 
+
+
+
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증실패"),
@@ -142,24 +153,25 @@ public class BoardController {
         boolean isAuthorized = checkUserAuthorization();
         boolean hasPermission = checkUserPermission();
 
-        BoardRequest boardRequest = BoardRequest.builder()
-                .boardTitle(boardDTO.getBoardTitle())
-                .boardContents(boardDTO.getBoardContents())
-                .boardWriter(boardDTO.getBoardWriter())
-                .dueDate(boardDTO.getDueDate())
-                .boardType(boardDTO.getBoardType())
-                .build();
-
+        // if(!isQuthrorized) {
+        // throw new xxx Exetipn()..}
         if (isAuthorized) {
+
             if (hasPermission) {
+
+                BoardRequest boardRequest = BoardRequest.builder()
+                        .boardTitle(boardDTO.getBoardTitle())
+                        .boardContents(boardDTO.getBoardContents())
+                        .boardWriter(boardDTO.getBoardWriter())
+                        .dueDate(boardDTO.getDueDate())
+                        .boardType(boardDTO.getBoardType())
+                        .build();
+
                 BoardResponse update = boardService.update(boardRequest);
                 return ResponseEntity.ok(update);
-            } else {
-                throw new ForbiddenException();
-            }
-        } else {
-            throw new UnauthorizedException();
-        }
+            } else { throw new ForbiddenException(); }
+
+        } else { throw new UnauthorizedException(); }
 
     }
 
@@ -172,6 +184,9 @@ public class BoardController {
         // 권한 실패라고 가정
         return true;
     }
+
+
+
 
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -187,10 +202,4 @@ public class BoardController {
         boardService.delete(id);
     }
 
-
-    private static HttpHeaders getResponseHttpHeaders() {
-        // 새로운 Response 헤더 필드 추가
-        headers.add("CodeWriter", "kks");
-        return headers;
-    }
 }

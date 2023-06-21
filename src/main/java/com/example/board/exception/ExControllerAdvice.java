@@ -4,6 +4,7 @@ import com.example.board.exception.errorstatus.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +20,7 @@ public class ExControllerAdvice {
     public ErrorResponse illegalExHandler(IllegalArgumentException ex) {
         log.error("400 error", ex);
 
+        //
         return new ErrorResponse("Bad Request Exception", 400, "잘못된 값을 입력하였습니다.");
     }
 
@@ -28,6 +30,8 @@ public class ExControllerAdvice {
 
         ErrorResponse errorResponse = new ErrorResponse("Unauthorized Exception!", 401, "인증에 실패하였습니다.");
 
+        // ex.responseMessage..
+        //
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 

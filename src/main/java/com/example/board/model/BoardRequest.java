@@ -2,6 +2,9 @@ package com.example.board.model;
 
 import lombok.*;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -31,6 +34,8 @@ public class BoardRequest {
     // 책임이 너무 많아지게 된다. ( = 책임의 분리 )
     // 유틸성 Mapper Class
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     // 언제 & 어떻게 동작하는지에 대한 이해

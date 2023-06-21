@@ -32,8 +32,7 @@ import java.time.LocalDateTime;
                 dueDate = "dueDate")
 })
 public class BoardDTO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
 
     @NotNull(message = "작성자는 필수값입니다.")

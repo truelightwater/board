@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.board.mapper.MemberMapper">
+
+    <!-- member_table 테이블 전체 컬럼 -->
+    <sql id="postColumns">
+        id
+        , loginId
+        , name
+        , password
+    </sql>
+
+
+    <!-- 회원정보 저장 -->
+    <insert id="saveMember" parameterType="com.example.board.member.Member" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO member_table (
+        <include refid="postColumns" />
+        ) VALUES (
+        #{id}
+        , #{loginId}
+        , #{name}
+        , #{password}
+        )
+    </insert>
+
+
+    <!-- 회원 정보 조회 -->
+    <select id="findByMember" parameterType="long" resultType="com.example.board.member.Member">
+        SELECT
+        <include refid="postColumns" />
+        FROM
+        member_table
+        WHERE
+        id = #{value}
+    </select>
+
+    <!-- 회원정보 전체 조회 -->
+    <select id="findAllMember" resultType="com.example.board.member.Member">
+        SELECT
+        <include refid="postColumns" />
+        FROM
+        member_table
+        ORDER BY
+        id DESC
+    </select>
+
+    <!-- 로그인 회원 정보 조회 -->
+    <select id="findLoginMember" resultType="com.example.board.member.Member">
+        SELECT
+        <include refid="postColumns" />
+        FROM
+        member_table
+        WHERE loginId = #{loginId}
+    </select>
+
+
+    <!-- 회원정보 선택 삭제 -->
+    <delete id="deleteByMember" parameterType="long">
+        DELETE FROM member_table
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!-- 회원정보 전체 삭제 -->
+    <delete id="deleteTable" parameterType="long">
+        DELETE FROM member_table
+    </delete>
+
+
+
+
+</mapper>
