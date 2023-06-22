@@ -1,5 +1,6 @@
 package com.example.board.model;
 
+import com.example.board.member.Member;
 import lombok.*;
 
 import javax.persistence.GeneratedValue;
@@ -56,5 +57,6 @@ public class BoardRequest {
     private LocalDateTime boardUpdatedTime;
     private LocalDate dueDate;
     private BoardTypes boardType;
+
 
 }
