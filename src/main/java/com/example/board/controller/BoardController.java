@@ -21,6 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
@@ -117,7 +119,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 상세내용 조회", notes = "하나의 게시글을 찾아서 보여줍니다.")
     @GetMapping("/v1/boards/{id}")
     public ResponseEntity<BoardResponse> findById
-            (@PathVariable("id") @ApiParam(value = "게시글 번호") Long id, HttpServletRequest request) {
+            (@PathVariable("id") @ApiParam(value = "게시글 번호") Long id, HttpServletRequest request) throws SQLException {
 
         // 찾는 아이디가 없다면, NOT_FOUND 를 발생시킨다.
         BoardResponse byId = boardService.findById(id);
@@ -127,7 +129,9 @@ public class BoardController {
         }
 
         //  해당 게시글의 조회수를 하나 올리고 반환한다.
+        log.info("Controller updateHits");
         boardService.updateHits(id, request);
+
 
         // 비즈니스 로직
         BoardResponse response = boardService.findById(id);
