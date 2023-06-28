@@ -1,5 +1,6 @@
 package com.example.board.service;
 
+import com.example.board.mapper.IpMapper;
 import com.example.board.model.BoardRequest;
 import com.example.board.model.BoardResponse;
 import com.example.board.mapper.BoardMapper;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor                // 생성자 주입
 public class BoardService {
     private final BoardMapper boardMapper;
+    private final IpMapper ipMapper;
     private final DataSource dataSource;
     private Set<String> uniqueIPs = new HashSet<>();
 
@@ -50,12 +52,11 @@ public class BoardService {
 
         try {
 
-            if (!uniqueIPs.contains(clientIP)) {
-                uniqueIPs.add(clientIP);
+            if (!ipMapper.exist(clientIP)) {
+                ipMapper.save(clientIP);
                 boardMapper.updateHits(id);
             }
 
-            // Thread.sleep(10000);
             con.commit();
 
         } catch (Exception e) {

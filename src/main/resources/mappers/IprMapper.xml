@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.board.mapper.IpMapper">
+
+    <!-- Ip 테이블 전체 컬럼 -->
+    <sql id="postColumns">
+        ip
+    </sql>
+
+    <!-- IP 저장 -->
+    <insert id="save" parameterType="String" >
+        INSERT INTO IP (ip) VALUES ( #{ip} )
+    </insert>
+
+    <!-- IP 존재유무 -->
+    <select id="exist" parameterType="String" resultType="boolean">
+        SELECT EXISTS(select * from IP where ip = #{ip} limit 1)
+    </select>
+
+
+    <!-- IP 조회 -->
+    <select id="findByIp" parameterType="String" resultType="String">
+        SELECT * FROM IP WHERE ip = #{value}
+    </select>
+
+</mapper>
