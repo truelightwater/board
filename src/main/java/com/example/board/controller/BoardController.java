@@ -34,6 +34,12 @@ import java.util.*;
 public class BoardController {
     private final BoardService boardService;      // 생성자 주입
 
+    @GetMapping("/")
+    public String hello() {
+        long pid = ProcessHandle.current().pid();
+        return String.format("Hello world ! @PID : %d", pid);
+    }
+
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 201, message = "게시글 생성"),
@@ -46,6 +52,7 @@ public class BoardController {
     @PostMapping("/v1/board")
     public ResponseEntity<BoardRequest> save(@Validated @ModelAttribute BoardDTO boardDTO,
                                              BindingResult bindingResult) {
+
         log.info("boardDTO = " + boardDTO);
 
 
