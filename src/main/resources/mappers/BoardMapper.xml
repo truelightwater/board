@@ -66,11 +66,7 @@
 
     <!-- 글 조회  -->
     <update id="updateHits" parameterType="com.example.board.model.BoardRequest">
-        UPDATE boardTable
-        SET
-            boardHits = boardHits+1
-        WHERE
-            id = #{id}
+        UPDATE boardTable SET boardHits = boardHits+1 WHERE id = #{id}
     </update>
 
 

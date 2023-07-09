@@ -32,11 +32,6 @@ public class BoardService {
     private final BoardMapper boardMapper;
     private final IpMapper ipMapper;
     private final DataSource dataSource;
-/*    private PlatformTransactionManager transactionManager;
-
-    public void setTransactionManager(PlatformTransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }*/
 
     public void save(BoardRequest boardRequest) {
         boardMapper.save(boardRequest);
@@ -80,7 +75,7 @@ public class BoardService {
 
     }
 
-    public void updateHits(Long id, HttpServletRequest request) throws SQLException {
+    public synchronized void updateHits(Long id, HttpServletRequest request) throws SQLException {
         // 클라이언트 유저의 IP로 한번만 될 수 있도록 하기
         // HashMap 에 IP 체크 (class or Object)
         String clientIP = request.getRemoteAddr();  // 요청자의 IP
@@ -96,9 +91,12 @@ public class BoardService {
 
             if (!ipMapper.exist(clientIP)) {
                 ipMapper.save(clientIP);
+
                 boardMapper.updateHits(id);
             }
 
+            sleep(20000);
+            boardMapper.updateHits(id);
             transactionManager.commit(status);
 
         } catch (Exception e) {
@@ -107,6 +105,15 @@ public class BoardService {
         }
 
     }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public BoardResponse findById(Long id) {
         return Optional.ofNullable(boardMapper.findById(id))
